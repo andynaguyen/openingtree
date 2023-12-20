@@ -18,6 +18,17 @@ export default class PGNLoader extends React.Component {
         const queryParams = new URLSearchParams(window.location.search)
         let selectedSite = queryParams.get("source")
         let selectedUsername = queryParams.get("username")
+        
+        const getExpandedPanel = () => {
+            switch (true) {
+                case selectedSite != null && selectedUsername != null:
+                    return 'filters'
+                case selectedSite != null:
+                    return 'user'
+                default:
+                    return 'source'
+            }
+        }
 
         this.state = {
             playerName: selectedUsername ?? '',
@@ -25,7 +36,7 @@ export default class PGNLoader extends React.Component {
             playerColor: this.props.settings.playerColor,
             isAdvancedFiltersOpen: false,
             isGamesSubsectionOpen: false,
-            expandedPanel: selectedSite?'user':'source',
+            expandedPanel: getExpandedPanel(),
             notablePlayers:null,
             notableEvents:null,
             files:[],
