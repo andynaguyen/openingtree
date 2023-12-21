@@ -16,8 +16,8 @@ export default class PGNLoader extends React.Component {
     constructor(props) {
         super(props)
         const queryParams = new URLSearchParams(window.location.search)
-        let selectedSite = queryParams.get("source")
-        let selectedUsername = queryParams.get("username")
+        const selectedSite = queryParams.get("source")
+        const selectedUsername = queryParams.get("username")
         
         const getExpandedPanel = () => {
             switch (true) {
@@ -29,7 +29,7 @@ export default class PGNLoader extends React.Component {
                     return 'source'
             }
         }
-
+        
         this.state = {
             profilePicUrl: null,
             playerExists: null, 
@@ -45,22 +45,23 @@ export default class PGNLoader extends React.Component {
             selectedNotableEvent:{},
             selectedNotablePlayer:{},
             lichessLoginState: Constants.LICHESS_NOT_LOGGED_IN,
-            lichessLoginName: null
+            lichessLoginName: null,
+            [Constants.FILTER_NAME_DOWNLOAD_LIMIT]: Constants.MAX_DOWNLOAD_LIMIT,
+            [Constants.TIME_CONTROL_ULTRA_BULLET]: true,
+            [Constants.TIME_CONTROL_BLITZ]: true,
+            [Constants.TIME_CONTROL_RAPID]: true,
+            [Constants.TIME_CONTROL_CLASSICAL]: true,
+            [Constants.TIME_CONTROL_CORRESPONDENCE]: true,
+            [Constants.TIME_CONTROL_DAILY]: true,
+            [Constants.FILTER_NAME_RATED]: "all",
+            [Constants.FILTER_NAME_ELO_RANGE]: [0, Constants.MAX_ELO_RATING],
+            [Constants.FILTER_NAME_OPPONENT]: '',
+            [Constants.TIME_CONTROL_BULLET]: true
         }
         if(selectedSite === Constants.SITE_LICHESS) {
             this.fetchLichessLoginStatus()
         }
-        this.state[Constants.FILTER_NAME_DOWNLOAD_LIMIT] = Constants.MAX_DOWNLOAD_LIMIT
-        this.state[Constants.TIME_CONTROL_ULTRA_BULLET] = true
-        this.state[Constants.TIME_CONTROL_BULLET] = true
-        this.state[Constants.TIME_CONTROL_BLITZ] = true
-        this.state[Constants.TIME_CONTROL_RAPID] = true
-        this.state[Constants.TIME_CONTROL_CLASSICAL] = true
-        this.state[Constants.TIME_CONTROL_CORRESPONDENCE] = true
-        this.state[Constants.TIME_CONTROL_DAILY] = true
-        this.state[Constants.FILTER_NAME_RATED] = "all"
-        this.state[Constants.FILTER_NAME_ELO_RANGE] = [0, Constants.MAX_ELO_RATING]
-        this.state[Constants.FILTER_NAME_OPPONENT] = ''
+        this.fetchProfileData()
     }
 
 
@@ -124,34 +125,19 @@ export default class PGNLoader extends React.Component {
         })
         return true
     }
-
+    
     async playerDetailsChange(playerName, files, selectedNotableEvent, selectedNotablePlayer, selectedOnlineTournament) {
         this.setState({
             playerName: playerName,
-            expandedPanel:SitePolicy.isFilterPanelEnabled(this.state.site, playerName, selectedNotablePlayer)?'filters':'',
+            expandedPanel: SitePolicy.isFilterPanelEnabled(this.state.site, playerName, selectedNotablePlayer)? 'filters' : '',
             files:files,
             selectedNotableEvent:selectedNotableEvent,
             selectedNotablePlayer:selectedNotablePlayer,
             playerColor:'',
             selectedOnlineTournament:selectedOnlineTournament
+        }, () => {
+            this.fetchProfileData();
         })
-        try {
-            if (this.state.site === Constants.SITE_CHESS_DOT_COM) {
-                const response = await fetch(`https://api.chess.com/pub/player/${encodeURIComponent(playerName)}`)
-                if (response.ok) {
-                    const data = await response.json()
-                    this.setState({profilePicUrl: data.avatar, playerExists: true})
-                } else {
-                    this.setState({playerExists: false})
-                }
-            } else if (this.state.site === Constants.SITE_LICHESS) {
-                const response = await fetch(`https://lichess.org/api/user/${encodeURIComponent(playerName)}`)
-                this.setState({playerExists: response.ok})
-            }
-        } catch (e) {
-            console.error(e)
-            this.setState({ playerExists: false })
-        }
         trackEvent(Constants.EVENT_CATEGORY_PGN_LOADER, "PlayerNameSaved")
     }
     fetchGOATGames(url, callback){
@@ -174,6 +160,30 @@ export default class PGNLoader extends React.Component {
                 callback(gamesDetails)
             }
         })
+    }
+
+    /**
+     * 
+     * @param {URLSearchParams} params 
+     */
+    async fetchProfileData() {
+        try {
+            if (this.state.site === Constants.SITE_CHESS_DOT_COM) {
+                const response = await fetch(`https://api.chess.com/pub/player/${this.state.playerName}`)
+                if (response.ok) {
+                    const data = await response.json()
+                    this.setState({profilePicUrl: data.avatar, playerExists: true})
+                } else {
+                    this.setState({playerExists: false})
+                }
+            } else if (this.state.site === Constants.SITE_LICHESS) {
+                const response = await fetch(`https://lichess.org/api/user/${encodeURIComponent(this.state.playerName)}`)
+                this.setState({playerExists: response.ok})
+            }
+        } catch (e) {
+            console.error(e)
+            this.setState({ playerExists: false })
+        }
     }
 
 
