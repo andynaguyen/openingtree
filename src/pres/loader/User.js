@@ -18,6 +18,8 @@ import LockOpen from '@material-ui/icons/Lock'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import {Spinner} from 'reactstrap'
 import { trackEvent } from '../../app/Analytics'
+import {Tooltip} from '@material-ui/core'
+
 
 const DEFAULT_CHESSCOM_PIC_URL = "https://images-ext-2.discordapp.net/external/aStnmplCXfQgwmEGD3cZlkuUByRcX4P5YMTj1YTS6oo/https/i.imgur.com/tnc2dmO.png?format=webp&quality=lossless&width=800&height=800"
 
@@ -203,8 +205,13 @@ export default class User extends React.Component {
         } else if(this.props.site === Constants.SITE_LICHESS || 
             this.props.site === Constants.SITE_CHESS_DOT_COM){
             if(this.props.playerName) {
-                const profilePicUrl = this.props.profilePicUrl ?? DEFAULT_CHESSCOM_PIC_URL
-                return <span>{getNumberIcon('done')}<img alt="lichess" className="siteimage" style={{borderRadius: "2px"}} src={profilePicUrl} /> {" " } <b>{this.props.playerName}</b></span>
+                if (this.props.playerExists === true) {
+                    const profilePicUrl = this.props.profilePicUrl ?? DEFAULT_CHESSCOM_PIC_URL
+                    const profilePic = <img alt={this.props.playerName} className="siteimage" style={{borderRadius: "2px"}}  src={profilePicUrl} />
+                    return <span>{getNumberIcon('done')}{profilePic} {"  "} <b>{this.props.playerName}</b></span>
+                } else if (this.props.playerExists === false) {
+                    return <Tooltip title="Couldn't find this user!"><span>{getNumberIcon('done')}{" "}❌  <b>{this.props.playerName}</b></span></Tooltip>
+                }
             }
         } else if(this.props.site === Constants.SITE_PGN_FILE || 
             this.props.site === Constants.SITE_OPENING_TREE_FILE){
