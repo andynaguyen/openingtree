@@ -31,6 +31,7 @@ export default class PGNLoader extends React.Component {
         }
 
         this.state = {
+            profilePicUrl: null,
             playerName: selectedUsername ?? '',
             site: selectedSite?selectedSite:'',
             playerColor: this.props.settings.playerColor,
@@ -133,6 +134,13 @@ export default class PGNLoader extends React.Component {
             playerColor:'',
             selectedOnlineTournament:selectedOnlineTournament
         })
+        if (this.state.site === Constants.SITE_CHESS_DOT_COM) {
+            fetch(`https://api.chess.com/pub/player/${playerName}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    this.setState({profilePicUrl: data.avatar})
+                });
+        }
         trackEvent(Constants.EVENT_CATEGORY_PGN_LOADER, "PlayerNameSaved")
     }
     fetchGOATGames(url, callback){
@@ -239,6 +247,7 @@ export default class PGNLoader extends React.Component {
                 lichessLoginState={this.state.lichessLoginState} lichessLoginName={this.state.lichessLoginName}
                 logoutOfLichess={this.logoutOfLichess.bind(this)} refreshLichessStatus={this.fetchLichessLoginStatus.bind(this)}
                 selectedOnlineTournament={this.state.selectedOnlineTournament} oauthManager={this.props.oauthManager}
+                profilePicUrl={this.state.profilePicUrl}
             />
             <Filters expandedPanel={this.state.expandedPanel} playerColor={this.state.playerColor}
                 handleExpansionChange={this.handleExpansionChange('filters').bind(this)}

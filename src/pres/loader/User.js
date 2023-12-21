@@ -19,6 +19,8 @@ import ExitToApp from '@material-ui/icons/ExitToApp'
 import {Spinner} from 'reactstrap'
 import { trackEvent } from '../../app/Analytics'
 
+const DEFAULT_CHESSCOM_PIC_URL = "https://images-ext-2.discordapp.net/external/aStnmplCXfQgwmEGD3cZlkuUByRcX4P5YMTj1YTS6oo/https/i.imgur.com/tnc2dmO.png?format=webp&quality=lossless&width=800&height=800"
+
 export default class User extends React.Component {
 
     constructor(props) {
@@ -201,7 +203,8 @@ export default class User extends React.Component {
         } else if(this.props.site === Constants.SITE_LICHESS || 
             this.props.site === Constants.SITE_CHESS_DOT_COM){
             if(this.props.playerName) {
-                return <span>{getNumberIcon('done')}User: <b>{this.props.playerName}</b></span>
+                const profilePicUrl = this.props.profilePicUrl ?? DEFAULT_CHESSCOM_PIC_URL
+                return <span>{getNumberIcon('done')}<img alt="lichess" className="siteimage" style={{borderRadius: "2px"}} src={profilePicUrl} /> {" " } <b>{this.props.playerName}</b></span>
             }
         } else if(this.props.site === Constants.SITE_PGN_FILE || 
             this.props.site === Constants.SITE_OPENING_TREE_FILE){
