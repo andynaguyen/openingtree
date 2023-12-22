@@ -162,11 +162,10 @@ export default class PGNLoader extends React.Component {
         })
     }
 
-    /**
-     * 
-     * @param {URLSearchParams} params 
-     */
     async fetchProfileData() {
+        if (this.state.playerName === '') {
+            return
+        }
         try {
             if (this.state.site === Constants.SITE_CHESS_DOT_COM) {
                 const response = await fetch(`https://api.chess.com/pub/player/${this.state.playerName}`)
