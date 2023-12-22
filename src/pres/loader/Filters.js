@@ -133,7 +133,7 @@ export default class Filters extends React.Component {
                         <FormHelperText>{this.state.colorError}</FormHelperText>
                     </FormControl>
                 </div>
-    {SitePolicy.isAdvancedFiltersEnabled(this.props.site)?<div className="pgnloadersection"><span className="linkStyle" onClick={this.toggleState('isAdvancedFiltersOpen').bind(this)}>Advanced filters <FontAwesomeIcon icon={this.state.isAdvancedFiltersOpen ? faCaretUp : faCaretDown} /> {this.state.isAdvancedFiltersOpen?null:<Badge className="sourceName" color="info">New!</Badge>}</span>
+    {SitePolicy.isAdvancedFiltersEnabled(this.props.site)?<div className="pgnloadersection"><span className="linkStyle" onClick={this.toggleState('isAdvancedFiltersOpen').bind(this)}>Advanced filters <FontAwesomeIcon icon={this.state.isAdvancedFiltersOpen ? faCaretUp : faCaretDown} /> </span>
                     <Collapse isOpen={this.state.isAdvancedFiltersOpen}>
                             <AdvancedFilters
                                 site={this.props.site}

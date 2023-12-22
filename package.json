@@ -94,8 +94,8 @@
     "worker-plugin": "^4.0.3"
   },
   "scripts": {
-    "preview": "vercel preview",
     "deploy": "vercel",
+    "dev": "yarn start",
     "start": "NODE_OPTIONS=--openssl-legacy-provider node scripts/start.js",
     "build": "NODE_OPTIONS=--openssl-legacy-provider node scripts/build.js",
     "test": "export NODE_ENV=test; npx babel ./src --out-dir dist && cucumber-js tests/functionalTests $REPORT -t 'not @skipTests' $EXTRAS",

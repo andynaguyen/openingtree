@@ -2,7 +2,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import React from 'react'
-import {Collapse, Container, Row, Col, Badge} from 'reactstrap'
+import {Collapse, Container, Row, Col } from 'reactstrap'
 import { FormControlLabel,Slider } from '@material-ui/core';
 import * as Constants from '../../app/Constants'
 import {getTimeControlLabel, getELORangeLabel, getRatedLabel, 
@@ -170,8 +170,8 @@ export default class AdvancedFilters extends React.Component {
           /></Col>)}</Row>
     }
 
-    subSectionComponent(title, label, changeCallback, children, newBadge) {
-        return <div className="pgnloadersection">{title}: <span className="smallText">[<span className="linkStyle" onClick={changeCallback}>change</span>]</span> {newBadge?<Badge className="sourceName" color="info">New!</Badge>:null}
+    subSectionComponent(title, label, changeCallback, children) {
+        return <div className="pgnloadersection">{title}: <span className="smallText">[<span className="linkStyle" onClick={changeCallback}>change</span>]</span> 
             <div><b>{label}</b></div>{children}
             </div>
     }
