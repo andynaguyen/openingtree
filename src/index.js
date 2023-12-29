@@ -1,7 +1,5 @@
-import ReactDOM from 'react-dom'
-import MainContainer from './pres/MainContainer'
-import React from 'react'
-import {trackPageView} from './app/Analytics'
+import ReactDOM from "react-dom";
+import MainContainer from "./pres/MainContainer";
+import React from "react";
 
-ReactDOM.render(<MainContainer />, document.getElementById('root'))
-trackPageView()
+ReactDOM.render(<MainContainer />, document.getElementById("root"));
